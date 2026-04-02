@@ -266,22 +266,10 @@ async def handle_act(
         for k, v in relevant_data.items():
             if isinstance(v, str) and v:
                 creds.setdefault(str(k), str(v))
-    # Override credentials with "equals" constraint values (higher priority than defaults).
-    # Use direct assignment so explicit prompt constraints override the generic placeholders
-    # (e.g. "username equals 'newuser1'" should override the default "<username>").
+    # Add all "equals" constraints as directly usable field values
     for c in state.constraints:
         if c.operator == "equals" and isinstance(c.value, str):
-            # Only override placeholder defaults, not values already extracted from prompt
-            if creds.get(c.field, "") in ("", "<username>", "<password>", "<signup_email>",
-                                          "<signup_username>", "<signup_password>"):
-                creds[c.field] = c.value
-            else:
-                creds.setdefault(c.field, c.value)
-
-    # Resolve <web_agent_id> placeholder in ALL credential values
-    # e.g. 'newuser<web_agent_id>' -> 'newuser1', 'user<web_agent_id>' -> 'user1'
-    if "<web_agent_id>" in prompt:
-        creds = {k: v.replace("<web_agent_id>", "1") for k, v in creds.items()}
+            creds.setdefault(c.field, c.value)
 
     creds_block = ""
     if creds:

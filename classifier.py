@@ -150,10 +150,8 @@ def classify_task_type(prompt: str) -> str:
         return "VIEW_DOCTOR_EDUCATION"
     if re.search(r"show\s+me\s+the\s+availability\s+details\s+for\s+a\s+doctor", t, re.IGNORECASE):
         return "VIEW_DOCTOR_AVAILABILITY"
-    if re.search(r"show\s+me\s+(details\s+(about|for)\s+(a\s+)?)?doctors?", t, re.IGNORECASE):
+    if re.search(r"show\s+me\s+(details\s+about\s+)?doctors", t, re.IGNORECASE):
         return "SEARCH_DOCTORS"
-    if re.search(r"show\s+details\s+for\s+a\s+doctor\s+where", t, re.IGNORECASE):
-        return "VIEW_DOCTOR_PROFILE"
     if re.search(r"(search|retrieve)\s+(medical|details\s+of\s+medical)", t, re.IGNORECASE):
         return "SEARCH_MEDICAL_ANALYSIS"
     if re.search(r"view\s+medical\s+analysis", t, re.IGNORECASE):
@@ -166,48 +164,12 @@ def classify_task_type(prompt: str) -> str:
         return "DOCTOR_CONTACTED_SUCCESSFULLY"
     if re.search(r"contact\s+(a\s+)?doctor", t, re.IGNORECASE):
         return "CONTACT_DOCTOR"
-    if re.search(r"retrieve\s+details\s+of\s+appointments|show\s+me\s+appointments\s+where", t, re.IGNORECASE):
+    if re.search(r"retrieve\s+details\s+of\s+appointments", t, re.IGNORECASE):
         return "SEARCH_APPOINTMENT"
     if re.search(r"request\s+a\s+quick\s+appointment", t, re.IGNORECASE):
         return "REQUEST_QUICK_APPOINTMENT"
-    if re.search(r"(book|schedule)\s+(an?\s+)?appointment\s+(with|where|for)", t, re.IGNORECASE):
-        return "APPOINTMENT_BOOKED_SUCCESSFULLY"
     if re.search(r"doctor.*education|education.*doctor", t, re.IGNORECASE):
         return "VIEW_DOCTOR_EDUCATION"
-
-    # ---- AutoDiscord (8015) ----
-    if re.search(r"send\s+a\s+message\s+in\s+the\s+channel", t, re.IGNORECASE):
-        return "SEND_MESSAGE"
-    if re.search(r"open\s+the\s+settings\s+page", t, re.IGNORECASE):
-        return "OPEN_SETTINGS"
-    if re.search(r"join\s+(a\s+|the\s+)?voice\s+channel", t, re.IGNORECASE):
-        return "JOIN_VOICE_CHANNEL"
-    if re.search(r"(select|click|open)\s+(a\s+)?(?:text\s+)?channel\s+(that|where|whose|not)", t, re.IGNORECASE):
-        return "SELECT_CHANNEL"
-    if re.search(r"select\s+the\s+dm\s+(that|where|from|with)", t, re.IGNORECASE):
-        return "SELECT_DM"
-    if re.search(r"(view|open|go\s+to)\s+(your\s+|the\s+)?dms?\b", t, re.IGNORECASE):
-        return "VIEW_DMS"
-    if re.search(r"select\s+the\s+server\s+(that|where|whose|named|called)", t, re.IGNORECASE):
-        return "SELECT_SERVER"
-    if re.search(r"(mute|unmute|toggle\s+mute)", t, re.IGNORECASE):
-        return "VOICE_MUTE_TOGGLE"
-    if re.search(r"settings.*account\s+tab|account\s+tab.*settings|navigate.*account.*settings", t, re.IGNORECASE):
-        return "SETTINGS_ACCOUNT"
-
-    # ---- AutoStats (8014) ----
-    if re.search(r"favorite\s+the\s+subnet", t, re.IGNORECASE):
-        return "FAVORITE_SUBNET"
-    if re.search(r"disconnect\s+the\s+wallet|disconnect.*wallet", t, re.IGNORECASE):
-        return "DISCONNECT_WALLET"
-    if re.search(r"connect\s+(a\s+|the\s+)?wallet", t, re.IGNORECASE):
-        return "CONNECT_WALLET"
-    if re.search(r"view\s+(the\s+)?block\s+(with|where|whose|number)", t, re.IGNORECASE):
-        return "VIEW_BLOCK"
-    if re.search(r"view\s+(the\s+)?subnet\s+(with|where|whose|named|called)", t, re.IGNORECASE):
-        return "VIEW_SUBNET"
-    if re.search(r"view\s+(the\s+)?validator\s+(with|where|whose|named)", t, re.IGNORECASE):
-        return "VIEW_VALIDATOR"
 
     # ---- AutoConnect (8008) ----
     if re.search(r"comment\s+on\s+the\s+post", t, re.IGNORECASE):
@@ -234,17 +196,9 @@ def classify_task_type(prompt: str) -> str:
         return "APPLY_FOR_JOB"
     if re.search(r"edit\s+profile\s+to\s+set\s+the\s+bio", t, re.IGNORECASE):
         return "EDIT_PROFILE_BIO"
-    if re.search(r"add\s+(a\s+)?new\s+experience\s+(with|where|at)", t, re.IGNORECASE):
-        return "ADD_EXPERIENCE"
-    if re.search(r"add\s+(an?\s+)?experience\s+(at|with|where)", t, re.IGNORECASE):
-        return "ADD_EXPERIENCE"
-    if re.search(r"(edit|update|modify)\s+(an?\s+)?experience\s+(where|with|at)", t, re.IGNORECASE):
-        return "EDIT_EXPERIENCE"
 
     # ---- AutoHire (8009) ----
-    if re.search(r"decide\s+to\s+remove\s+expert\s+(from|whose)", t, re.IGNORECASE):
-        return "HIRE_LATER_REMOVED"
-    if re.search(r"remove\s+expert\s+(whose|from\s+hire\s+later)", t, re.IGNORECASE):
+    if re.search(r"decide\s+to\s+remove\s+expert\s+from\s+hire\s+later", t, re.IGNORECASE):
         return "HIRE_LATER_REMOVED"
     if re.search(r"decide\s+to\s+hire\s+later", t, re.IGNORECASE):
         return "HIRE_LATER"
@@ -300,10 +254,6 @@ def classify_task_type(prompt: str) -> str:
         return "ADD_TO_WISHLIST_HOTEL"
     if re.search(r"apply.*filter.*hotel|show\s+details\s+for\s+hotels", t, re.IGNORECASE):
         return "APPLY_FILTERS"
-    if re.search(r"go\s+back\s+to\s+all\s+hotels", t, re.IGNORECASE):
-        return "BACK_TO_ALL_HOTELS"
-    if re.search(r"show\s+details\s+for\s+a\s+hotel\s+where", t, re.IGNORECASE):
-        return "VIEW_HOTEL"
 
     # ---- AutoDelivery (8006) ----
     if re.search(r"(next|show\s+me\s+the\s+next)\s+set\s+of\s+restaurants", t, re.IGNORECASE):
@@ -353,10 +303,6 @@ def classify_task_type(prompt: str) -> str:
     if re.search(r"open\s+the\s+help", t, re.IGNORECASE):
         return "HELP_VIEWED"
     if re.search(r"click\s+on\s+the\s+feature.*on\s+the\s+about\s+page", t, re.IGNORECASE):
-        return "ABOUT_FEATURE_CLICK"
-    if re.search(r"(show\s+details|details)\s+for\s+the\s+feature.*on\s+the\s+about\s+page", t, re.IGNORECASE):
-        return "ABOUT_FEATURE_CLICK"
-    if re.search(r"feature\s+(field\s+)?(?:CONTAINS|equals?)\s+.*about\s+page|about\s+page.*feature\s+(field\s+)?(?:CONTAINS|equals?)", t, re.IGNORECASE):
         return "ABOUT_FEATURE_CLICK"
     if re.search(r"contact\s+support\s+regarding", t, re.IGNORECASE):
         return "CONTACT_FORM_SUBMIT"
@@ -489,8 +435,6 @@ def classify_task_type(prompt: str) -> str:
         return "VIEW_MATTER_DETAILS"
 
     # ---- AutoMail (8005) additional ----
-    if re.search(r"reply\s+to\s+the\s+email|reply\s+the\s+email", t, re.IGNORECASE):
-        return "REPLY_EMAIL"
     if re.search(r"add\s+a\s+label\s+to\s+the\s+email\s+where", t, re.IGNORECASE):
         return "ADD_LABEL"
     if re.search(r"send\s+an\s+email\s+to\s+['\"]", t, re.IGNORECASE):
@@ -501,7 +445,7 @@ def classify_task_type(prompt: str) -> str:
     # ---- AutoDelivery (8006) additional ----
     if re.search(r"delete\s+the\s+review\s+for\s+the\s+restaurant", t, re.IGNORECASE):
         return "DELETE_REVIEW"
-    if re.search(r"show\s+me\s+restaurants?\s+(that\s+do\s+NOT|where\s+the\s+cuisine)", t, re.IGNORECASE):
+    if re.search(r"show\s+me\s+restaurants?\s+that\s+do\s+NOT", t, re.IGNORECASE):
         return "RESTAURANT_FILTER"
     if re.search(r"add\s+a?\s*menu\s+item\s+to\s+(my\s+)?cart", t, re.IGNORECASE):
         return "ADD_TO_CART_MENU_ITEM"
@@ -561,7 +505,7 @@ def classify_task_type(prompt: str) -> str:
         return "SELECT_TODAY"
 
     # ---- AutoList (8011) additional ----
-    if re.search(r"complete\s+task\s+(where|whose)", t, re.IGNORECASE):
+    if re.search(r"complete\s+task\s+where\s+the\s+name\s+equals", t, re.IGNORECASE):
         return "AUTOLIST_COMPLETE_TASK"
     if re.search(r"(please\s+)?set\s+the\s+date\s+for\s+the\s+task\s+to", t, re.IGNORECASE):
         return "AUTOLIST_SELECT_DATE_FOR_TASK"
@@ -590,17 +534,6 @@ def classify_task_type(prompt: str) -> str:
     if re.search(r"first.*authenticate.*username.*then.*logout", t, re.IGNORECASE):
         return "LOGOUT_BOOK"
 
-    # ---- AutoCinema specific login+action ----
-    if re.search(r"delete\s+(your\s+)?movie|then.*delete.*movie|login.*then.*delete", t, re.IGNORECASE):
-        if re.search(r"\b(login|sign.?in|authenticate)\b", t, re.IGNORECASE):
-            return "LOGIN_THEN_DELETE_ITEM"
-    if re.search(r"add\s+(a\s+)?film\s+(where|with|whose)|add\s+(a\s+)?new\s+film", t, re.IGNORECASE):
-        if re.search(r"\b(login|sign.?in|authenticate)\b", t, re.IGNORECASE):
-            return "LOGIN_THEN_ADD_ITEM"
-    if re.search(r"edit\s+(your\s+)?film|edit\s+(a\s+)?movie\s+(where|with)", t, re.IGNORECASE):
-        if re.search(r"\b(login|sign.?in|authenticate)\b", t, re.IGNORECASE):
-            return "LOGIN_THEN_EDIT_ITEM"
-
     # ---- Multi-step compound tasks ----
     if re.search(r"\b(logout|sign.?out|log.?out)\b", t) and re.search(r"\b(login|sign.?in|log.?in)\b", t):
         return "LOGIN_THEN_LOGOUT"
@@ -620,7 +553,7 @@ def classify_task_type(prompt: str) -> str:
         return "LOGIN_THEN_PURCHASE"
 
     # ---- AutoDelivery (8006) missing ----
-    if re.search(r"reorder\s+the\s+(recent\s+)?item", t, re.IGNORECASE):
+    if re.search(r"reorder\s+the\s+recent\s+item", t, re.IGNORECASE):
         return "QUICK_REORDER"
     if re.search(r"show\s+details\s+for\s+editing\s+a\s+cart\s+item", t, re.IGNORECASE):
         return "EDIT_CART_ITEM"
@@ -640,10 +573,6 @@ def classify_task_type(prompt: str) -> str:
         return "CREATE_TASK"
     if re.search(r"(edit|update|modify)\s+task\b", t, re.IGNORECASE):
         return "EDIT_TASK"
-
-    # ---- AutoRestaurant/generic logout ----
-    if re.search(r"log\s+out\s+of\s+the\s+account|please\s+log\s+out|click.*log\s+out|logout\s+of\s+the", t, re.IGNORECASE):
-        return "LOGOUT"
 
     # ---- Generic fallbacks ----
     if re.search(r"\b(register|sign.?up|create.*account|fill.*registration)\b", t):
