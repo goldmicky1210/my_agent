@@ -165,6 +165,201 @@ def try_quick_click(prompt: str, url: str, seed: str | None, step: int) -> list[
             return [{"type": "TypeAction", "text": m2.group(1), "selector": _sel_attr("id", "find-food")}]
         return []
 
+    # --- R15 additions: broader quick-click coverage ---
+
+    # autocinema (8000/8100) - movie actions
+    if port in (8000, 8100):
+        if re.search(r"go.*search\s+page|navigate.*search", t):
+            return _click("id", "go-to-search-button")
+        if re.search(r"view.*stats|statistics", t):
+            return _click("id", "stats-movies-card")
+
+    # autobooks (8001/8101) - book actions
+    if port in (8001, 8101):
+        if re.search(r"go.*search\s+page|navigate.*search", t):
+            return _click("id", "go-to-search-button")
+        if re.search(r"view.*cart|shopping\s+cart|my\s+cart", t):
+            return _click("href", f"/cart?seed={seed}") if seed else _click("id", "cart-page")
+        if re.search(r"reading\s+list", t):
+            return _click("id", "reading-list-button")
+        if re.search(r"add.*book.*cart|add.*to.*cart", t) and "featured" not in t:
+            return _click("id", "add-to-cart-button")
+
+    # autozone (8002/8102) - product actions (extend existing)
+    if port in (8002, 8102):
+        if re.search(r"go.*search\s+page|navigate.*search", t):
+            return _click("id", "go-to-search-button")
+        if re.search(r"checkout|proceed.*checkout", t):
+            return _click("id", "checkout-button")
+        if re.search(r"grid\s+view", t):
+            return _click("id", "grid-view-button")
+        if re.search(r"list\s+view", t):
+            return _click("id", "list-view-button")
+
+    # autodining (8003/8103) - restaurant actions
+    if port in (8003, 8103):
+        if re.search(r"help\s+page|faq|frequently\s+asked", t):
+            return _click("id", "help-link")
+        if re.search(r"contact\s+support|support\s+page", t):
+            return _click("id", "contact-support-button")
+        if re.search(r"delivery\s+toggle|switch.*delivery", t):
+            return _click("id", "delivery-toggle")
+
+    # autocrm (8004/8104) - CRM actions
+    if port in (8004, 8104):
+        if re.search(r"add.*client|new\s+client|create.*client", t):
+            return _click("id", "add-client-button")
+        if re.search(r"add.*matter|new\s+matter|create.*matter", t):
+            return _click("id", "add-matter-button")
+        if re.search(r"clients?\s+(?:page|section|nav|tab)", t):
+            return _click("id", "clients-nav-link")
+        if re.search(r"matters?\s+(?:page|section|nav|tab)", t):
+            return _click("id", "matters-nav-link")
+        if re.search(r"calendar\s+(?:page|section|nav|tab)", t):
+            return _click("id", "calendar-nav-link")
+        if re.search(r"documents?\s+(?:page|section|nav|tab)", t):
+            return _click("id", "documents-nav-link")
+        if re.search(r"billing\s+(?:page|section|nav|tab)", t):
+            return _click("id", "billing-nav-link")
+        if re.search(r"settings?\s+(?:page|section|nav|tab)", t):
+            return _click("id", "settings-nav-link")
+        if re.search(r"dashboard|home\s+page", t):
+            return _click("id", "dashboard-nav-link")
+        if re.search(r"help\s+(?:center|page|section)", t):
+            return _click("id", "help-link")
+
+    # automail (8005/8105) - email actions
+    if port in (8005, 8105):
+        if re.search(r"inbox|go.*inbox", t):
+            return _click("id", "sidebar-inbox")
+        if re.search(r"starred|go.*starred", t):
+            return _click("id", "sidebar-starred")
+        if re.search(r"drafts|go.*drafts", t):
+            return _click("id", "sidebar-drafts")
+        if re.search(r"sent\s+(?:mail|folder|page)|go.*sent", t):
+            return _click("id", "sidebar-sent")
+        if re.search(r"trash|go.*trash", t):
+            return _click("id", "sidebar-trash")
+        if re.search(r"compose|write.*(?:email|mail)|new\s+(?:email|mail)", t):
+            return _click("id", "compose-modal")
+        if re.search(r"star\s+(?:the|this)\s+email|mark.*star", t):
+            return _click("id", "star-button")
+        if re.search(r"archive\s+(?:the|this)\s+email", t):
+            return _click("id", "archive-button")
+        if re.search(r"mark.*spam", t):
+            return _click("id", "spam-button")
+        if re.search(r"mark.*unread", t):
+            return _click("id", "unread-button")
+
+    # autodelivery (8006/8106) - delivery actions (extend existing)
+    if port in (8006, 8106):
+        if re.search(r"pickup\s+mode|switch.*pickup", t):
+            return _click("id", "pickup-mode-button")
+        if re.search(r"delivery\s+mode|switch.*delivery", t):
+            return _click("id", "delivery-mode-button")
+        if re.search(r"view.*cart|my\s+cart|shopping\s+cart", t):
+            return _click("id", "cart-button")
+        if re.search(r"place\s+order|submit\s+order", t):
+            return _click("id", "place-order-button")
+        if re.search(r"checkout", t):
+            return _click("id", "checkout-button")
+
+    # autolodge (8007/8107) - hotel actions
+    if port in (8007, 8107):
+        if re.search(r"wishlist|saved\s+(?:stays|properties)", t):
+            return _click("id", "nav-wishlist")
+        if re.search(r"popular|popular\s+stays", t):
+            return _click("id", "nav-popular")
+        if re.search(r"help\s+(?:page|center)", t):
+            return _click("id", "nav-help")
+        if re.search(r"reserve|book\s+(?:this|the)\s+(?:stay|room|property)", t):
+            return _click("id", "reserve-button")
+        if re.search(r"check\s+availability", t):
+            return _click("id", "check-availability-button")
+        if re.search(r"share\s+(?:this|the)\s+(?:stay|property|listing)", t):
+            return _click("id", "share-button")
+
+    # autoconnect (8008/8108) - social actions
+    if port in (8008, 8108):
+        if re.search(r"post\s+(?:a\s+)?(?:status|update|article)", t):
+            return _click("id", "post-article")
+        if re.search(r"start\s+hir|hire\s+(?:a|someone)", t):
+            return _click("id", "start-hire-button")
+        if re.search(r"create.*posting|job\s+posting", t):
+            return _click("id", "create-posting-button")
+        if re.search(r"consult.*expert", t):
+            return _click("id", "consult-expert-button")
+        if re.search(r"add.*favorites?|save.*favorites?", t):
+            return _click("id", "add-to-favorites-button")
+
+    # autowork (8009/8109) - project management (extend existing)
+    if port in (8009, 8109):
+        if re.search(r"skills?\s+(?:tab|page|section)|navigate.*skills", t):
+            return _click("href", f"/skills?seed={seed}") if seed else None
+        if re.search(r"jobs?\s+(?:tab|page|section)|navigate.*jobs", t):
+            return _click("href", f"/jobs?seed={seed}") if seed else None
+        if re.search(r"search.*jobs?", t):
+            return _click("id", "jobs-search-button")
+
+    # autocalendar (8010/8110) - calendar (extend existing)
+    if port in (8010, 8110):
+        if re.search(r"previous\s+(?:month|week|day)|go\s+back", t):
+            return _click("id", "nav-prev-btn")
+        if re.search(r"next\s+(?:month|week|day)|go\s+forward", t):
+            return _click("id", "nav-next-btn")
+        if re.search(r"create.*event|new\s+event|add\s+event", t):
+            return _click("id", "create-event-button")
+        if re.search(r"add.*calendar|new\s+calendar|create.*calendar", t):
+            return _click("id", "add-calendar-modal")
+
+    # autolist (8011/8111) - task management
+    if port in (8011, 8111):
+        if re.search(r"today|today.?s?\s+tasks", t):
+            return _click("id", "today-nav-item")
+        if re.search(r"backlog|backlog\s+tasks", t):
+            return _click("id", "backlog-nav-item")
+        if re.search(r"create.*(?:task|event)|new\s+(?:task|event)|add\s+(?:task|event)", t):
+            return _click("id", "create-event-button")
+        if re.search(r"add.*project|new\s+project|create.*project", t):
+            return _click("id", "add-project-button")
+        if re.search(r"add.*team|new\s+team|create.*team", t):
+            return _click("id", "add-team-button")
+
+    # autodrive (8012/8112) - ride-sharing (extend existing)
+    if port in (8012, 8112):
+        if re.search(r"view.*trips?|my\s+trips?|trip\s+history", t):
+            return _click("id", "nav-trips")
+        if re.search(r"book\s+(?:a\s+)?ride|request\s+(?:a\s+)?ride", t):
+            return _click("id", "book-button")
+        if re.search(r"pickup\s+now|ride\s+now", t):
+            return _click("id", "pickup-now")
+
+    # autohealth (8013/8113) - healthcare
+    if port in (8013, 8113):
+        if re.search(r"book\s+(?:an?\s+)?appointment", t):
+            return _click("id", "book-appointment-button")
+        if re.search(r"upload.*record|add.*record", t):
+            return _click("id", "upload-record-button")
+        if re.search(r"view.*record", t):
+            return _click("id", "view-record-button")
+        if re.search(r"view.*prescription", t):
+            return _click("id", "view-prescription-button")
+        if re.search(r"view.*reviews?|see.*reviews?", t):
+            return _click("id", "view-reviews-button")
+        if re.search(r"contact.*doctor|message.*doctor", t):
+            return _click("id", "contact-doctor-button")
+
+    # autostats (8014/8114) - analytics/blockchain
+    if port in (8014, 8114):
+        if re.search(r"connect\s+wallet", t):
+            return _click("id", "connect-wallet-btn")
+        if re.search(r"buy\s+order|place.*buy", t):
+            return _click("id", "order-buy-submit-btn")
+        if re.search(r"sell\s+order|place.*sell", t):
+            return _click("id", "order-sell-submit-btn")
+        if re.search(r"send\s+transfer", t):
+            return _click("id", "send-transfer-toggle-btn")
+
     return None
 
 
